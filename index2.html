@@ -1,0 +1,116 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Tamper Detection — Home</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <link rel="stylesheet" href="style.css" />
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <header class="header">
+    <div class="brand">Anti-Tamper Dashboard</div>
+    <nav class="nav">
+      <a href="index.html">Home</a>
+      <a href="history.html">History</a>
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+  </header>
+
+  <main class="container">
+    <section class="card">
+      <div class="flex" style="align-items:flex-start">
+        <div class="col">
+          <h2>Live Status</h2>
+          <div id="liveStatus" class="small">No data yet</div>
+          <div style="margin-top:8px" id="lastTime" class="small"></div>
+          <div style="margin-top:12px" class="controls">
+            <button id="startBtn">Start Simulation</button>
+            <button id="stopBtn" class="ghost">Stop</button>
+            <button id="simOnce" class="ghost">Simulate One</button>
+          </div>
+        </div>
+
+        <div style="width:320px">
+          <h3 class="small">Recent activity</h3>
+          <div id="recentList" class="small" style="max-height:200px;overflow:auto;padding-top:8px"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h3>Add event (manual)</h3>
+      <form id="manualForm" style="display:grid;grid-template-columns:1fr 120px;gap:8px;align-items:start">
+        <select name="status" required>
+          <option value="OK">OK</option>
+          <option value="WARNING">WARNING</option>
+          <option value="TAMPER DETECTED">TAMPER DETECTED</option>
+        </select>
+        <input name="value" placeholder="value (optional)" />
+        <textarea name="note" placeholder="note (optional)" style="grid-column:1/3"></textarea>
+        <div style="grid-column:1/3;text-align:right">
+          <button type="submit">Add Event</button>
+        </div>
+      </form>
+    </section>
+
+    <section class="card">
+      <h3>Recent events chart</h3>
+      <canvas id="chartCanvas" style="width:100%;height:220px"></canvas>
+    </section>
+
+    <div class="footer">Tip: Use the History page to view, resolve, delete, or export records.</div>
+  </main>
+
+  <script>
+    // page wiring
+    const startBtn = document.getElementById("startBtn");
+    const stopBtn = document.getElementById("stopBtn");
+    const simOnceBtn = document.getElementById("simOnce");
+    const liveStatus = document.getElementById("liveStatus");
+    const lastTime = document.getElementById("lastTime");
+    const recentList = document.getElementById("recentList");
+    const chartCanvas = document.getElementById("chartCanvas").getContext("2d");
+    const manualForm = document.getElementById("manualForm");
+
+    function refreshSummary(){
+      const h = app.loadHistory();
+      if(h.length === 0){
+        liveStatus.textContent = "No events recorded yet.";
+        lastTime.textContent = "";
+        recentList.innerHTML = "<div class='small'>— no events —</div>";
+      } else {
+        const last = h[0];
+        liveStatus.innerHTML = <span class="status-badge ${ last.status==="OK"? "status-ok" : (last.status==="WARNING"? "status-warn":"status-alert") }">${last.status}</span> &nbsp; <span class="kv">${last.value}</span>;
+        lastTime.textContent = displayTime(last.ts || last.time || last.ts);
+        // show 6 recent
+        recentList.innerHTML = h.slice(0,6).map(it=><div style="padding:6px 0;border-bottom:1px solid #f1f5f9"><strong>${it.status}</strong> • ${it.value} <div class="small">${new Date(it.ts).toLocaleString()}</div></div>).join("");
+      }
+      app.renderChart(chartCanvas.canvas);
+    }
+
+    // helper to format time (small)
+    function displayTime(iso){
+      try{ return new Date(iso).toLocaleString(); }catch(e){ return iso; }
+    }
+
+    startBtn.addEventListener("click", ()=>{ app.startSimulation(); startBtn.disabled=true; stopBtn.disabled=false; });
+    stopBtn.addEventListener("click", ()=>{ app.stopSimulation(); startBtn.disabled=false; stopBtn.disabled=true; });
+    simOnceBtn.addEventListener("click", ()=>{ app.simulateOnce(); refreshSummary(); });
+
+    // manual add
+    app.setupManualAdd(manualForm, (ev)=>{ refreshSummary(); });
+
+    // when history changes elsewhere
+    document.addEventListener("historyChanged", ()=> refreshSummary());
+    document.addEventListener("simulationChanged", ()=> refreshSummary());
+
+    // init UI state
+    stopBtn.disabled = true;
+    refreshSummary();
+  </script>
+</body>
+</html>

@@ -1,0 +1,69 @@
+/* style.css - shared styles */
+:root{
+  --brand:#0b63d4;
+  --muted:#6b7280;
+  --bg:#f4f7fb;
+  --card:#fff;
+  --success:#16a34a;
+  --danger:#ef4444;
+  --warning:#f59e0b;
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:Inter, system-ui, Arial, sans-serif;
+  background:var(--bg);
+  color:#111;
+  -webkit-font-smoothing:antialiased;
+}
+.header{
+  background:linear-gradient(90deg,var(--brand),#085bb5);
+  color:white;
+  padding:14px 18px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+}
+.header .brand{font-weight:700;font-size:18px}
+.nav a{
+  color:rgba(255,255,255,0.95);
+  margin-left:12px;
+  text-decoration:none;
+  font-weight:600;
+}
+.container{max-width:1000px;margin:20px auto;padding:0 16px}
+.card{
+  background:var(--card);
+  padding:16px;
+  border-radius:12px;
+  box-shadow:0 8px 24px rgba(12,25,48,0.06);
+  margin-bottom:18px;
+}
+.flex{display:flex;gap:12px;align-items:center}
+.col{flex:1}
+.small{font-size:13px;color:var(--muted)}
+.status-badge{display:inline-block;padding:6px 10px;border-radius:8px;font-weight:700}
+.status-ok{background:#ecfdf5;color:var(--success)}
+.status-warn{background:#fff7ed;color:var(--warning)}
+.status-alert{background:#fff1f2;color:var(--danger)}
+
+button{background:var(--brand);color:white;border:0;padding:8px 12px;border-radius:8px;cursor:pointer;font-weight:600}
+button.ghost{background:transparent;color:var(--brand);border:1px solid rgba(11,99,212,0.12)}
+input,select,textarea{padding:10px;border-radius:8px;border:1px solid #e6e9ef;width:100%;font-size:14px}
+.table{width:100%;border-collapse:collapse;margin-top:10px}
+.table th,.table td{padding:10px;border-bottom:1px solid #eef2f7;text-align:left}
+.table th{background:#fbfdff;font-weight:700;font-size:13px}
+.controls{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.kv{font-weight:700;font-size:20px}
+.center{text-align:center}
+.badge{font-size:12px;padding:6px 8px;border-radius:999px;background:#f1f5f9;color:#0b63d4;font-weight:700}
+
+.footer{font-size:13px;color:var(--muted);text-align:center;padding:18px 0}
+
+/* responsive */
+@media(max-width:720px){
+  .flex{flex-direction:column;align-items:stretch}
+  .header{flex-direction:column;align-items:flex-start;gap:8px}
+}
