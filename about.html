@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>About Our Tamper Detection System</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    :root {
+      --main-bg: #f7f9fc;
+      --card-bg: #fff;
+      --accent: #0366d6;
+      --header-bg: #24292f;
+      --header-color: #fff;
+      --section-pad: 2rem;
+      --border-radius: 12px;
+      --shadow: 0 2px 12px rgba(33,150,243,0.07);
+      --heading-font: 'Segoe UI', Arial, sans-serif;
+    }
+    body {
+      background: var(--main-bg);
+      font-family: var(--heading-font);
+      margin: 0;
+      padding: 0;
+      color: #222;
+    }
+    header {
+      background: var(--header-bg);
+      color: var(--header-color);
+      text-align: center;
+      padding: 2rem 1rem 1.2rem 1rem;
+      box-shadow: var(--shadow);
+    }
+    header h1 {
+      margin: 0;
+      font-size: 2.3rem;
+      letter-spacing: 1px;
+    }
+    .container {
+      max-width: 900px;
+      margin: 2rem auto;
+      background: var(--card-bg);
+      border-radius: var(--border-radius);
+      box-shadow: var(--shadow);
+      padding: var(--section-pad);
+      display: flex;
+      flex-direction: column;
+      gap: 2.3rem;
+    }
+    section {
+      margin-bottom: 0;
+    }
+    h2 {
+      margin-top: 0;
+      margin-bottom: 0.6em;
+      font-size: 1.5rem;
+      color: var(--accent);
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      display: flex;
+      align-items: center;
+      gap: 0.5em;
+    }
+    ul {
+      padding-left: 1.4em;
+      margin-top: 0.4em;
+      margin-bottom: 0.7em;
+    }
+    li {
+      margin-bottom: 0.4em;
+      font-size: 1.06em;
+      line-height: 1.5;
+      display: flex;
+      gap: 0.6em;
+      align-items: flex-start;
+    }
+    .icon {
+      font-size: 1.3em;
+      margin-top: 0.07em;
+    }
+    .detect-list {
+      margin-top: 0.2em;
+      margin-bottom: 1em;
+    }
+    .goal {
+      font-size: 1.15rem;
+      font-weight: 600;
+      padding: 1rem 0;
+      color: #2e7d32;
+      text-align: center;
+      background: #f4faf6;
+      border-radius: 8px;
+      margin-top: 0.8em;
+      letter-spacing: 0.3px;
+    }
+    @media (max-width: 600px) {
+      .container {
+        padding: 1rem;
+      }
+      header h1 {
+        font-size: 1.4rem;
+      }
+      h2 { font-size: 1.1rem; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>About Our Tamper Detection System</h1>
+  </header>
+  <div class="container">
+    <section>
+      <h2>What is Tampering?</h2>
+      <ul>
+        <li><span class="icon">&#9889;</span> <b>Circuit Change/Bypass:</b> Altering wiring or creating alternate paths to bypass measurement.</li>
+        <li><span class="icon">&#x1F50E;</span> <b>Magnetic Interference:</b> Using strong magnets to disrupt electronic sensors or readings.</li>
+        <li><span class="icon">&#128187;</span> <b>Firmware Modification:</b> Changing device software/code to falsify data or disable alarms.</li>
+        <li><span class="icon">&#128274;</span> <b>Mechanical Seal Removal:</b> Breaking physical seals or tamper-evident enclosures.</li>
+        <li><span class="icon">&#128273;</span> <b>Other Unauthorized Access:</b> Any attempt to physically or digitally compromise the instrument.</li>
+      </ul>
+    </section>
+    <section>
+      <h2>Why Tamper Detection Matters</h2>
+      <ul>
+        <li><span class="icon">&#128176;</span> <b>Revenue Loss:</b> Tampering can lead to theft or under-reporting, impacting business earnings.</li>
+        <li><span class="icon">&#128202;</span> <b>Inaccurate Readings:</b> Manipulated devices provide false data, undermining trust and decisions.</li>
+        <li><span class="icon">&#128295;</span> <b>Equipment Damage:</b> Unauthorized modifications can damage sensitive components, causing costly repairs.</li>
+        <li><span class="icon">&#9888;</span> <b>Safety Hazards:</b> Tampering may introduce dangerous conditions, risking property and lives.</li>
+      </ul>
+    </section>
+    <section>
+      <h2>How We Detect Tampering</h2>
+      <ul class="detect-list">
+        <li><span class="icon">&#x1F50E;</span> <b>Magnetic Sensors:</b> Detect presence of external magnets used to interfere with measurements.</li>
+        <li><span class="icon">&#9889;</span> <b>Circuit Monitoring:</b> Identify circuit bypass, abnormal wiring, or unusual current flows.</li>
+        <li><span class="icon">&#128187;</span> <b>Firmware Checksum Validation:</b> Ensure integrity of device code and detect unauthorized changes.</li>
+        <li><span class="icon">&#128274;</span> <b>Optical/Mechanical Sensors:</b> Monitor for broken seals or tamper-evident enclosure breaches.</li>
+        <li><span class="icon">&#128247;</span> <b>Camera/Log Evidence:</b> Capture visual proof and maintain audit trails for verification.</li>
+        <li><span class="icon">&#129299;</span> <b>Smart Analytics:</b> Analyze usage and consumption patterns to flag anomalies.</li>
+      </ul>
+    </section>
+    <section>
+      <h2>Our Goal</h2>
+      <div class="goal">
+        Our mission is to safeguard measurement accuracy, promote transparency, and build trust—ensuring every reading is authentic and every transaction is fair.
+      </div>
+    </section>
+  </div>
+</body>
+</html>

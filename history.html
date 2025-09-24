@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Tamper History Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    :root {
+      --red: #e53935;
+      --orange: #fb8c00;
+      --yellow: #fdd835;
+      --green: #43a047;
+      --shadow: 0 2px 8px rgba(0,0,0,0.07);
+      --border: #e0e0e0;
+      --bg: #f7f9fc;
+      --header-bg: #24292f;
+      --header-color: #fff;
+      --badge-radius: 12px;
+    }
+    body {
+      background: var(--bg);
+      font-family: 'Segoe UI', Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      color: #222;
+    }
+    header {
+      background: var(--header-bg);
+      color: var(--header-color);
+      padding: 1rem 2rem;
+      text-align: center;
+      box-shadow: var(--shadow);
+      margin-bottom: 0;
+    }
+    h1 {
+      margin: 0 0 0.3em 0;
+      font-size: 2.2rem;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 2rem auto;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: var(--shadow);
+      padding: 2rem;
+    }
+    .filter-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      align-items: center;
+    }
+    .filter-row label {
+      font-size: 0.97rem;
+      margin-right: 0.5rem;
+    }
+    .filter-row input[type="text"],
+    .filter-row select,
+    .filter-row input[type="date"] {
+      padding: 0.4em 0.8em;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-size: 1rem;
+      margin-right: 0.5rem;
+      background: #f6f8fa;
+    }
+    .filter-row .checkbox-group {
+      display: flex;
+      gap: 0.4rem;
+      align-items: center;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      box-shadow: var(--shadow);
+    }
+    thead {
+      background: #f1f3f5;
+    }
+    th, td {
+      padding: 0.7rem 0.6rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+      font-size: 1rem;
+    }
+    th {
+      cursor: pointer;
+      user-select: none;
+      position: relative;
+      transition: background 0.2s;
+    }
+    th.sortable:hover {
+      background: #e4e7ec;
+    }
+    th .sort-arrow {
+      font-size: 0.85em;
+      margin-left: 0.2em;
+    }
+    tbody tr {
+      transition: box-shadow 0.2s, background 0.2s;
+    }
+    tbody tr:hover {
+      background: #f9fafb;
+      box-shadow: 0 2px 12px rgba(33,150,243,0.06);
+    }
+    .badge {
+      display: inline-block;
+      padding: 0.23em 0.7em;
+      border-radius: var(--badge-radius);
+      font-weight: 600;
+      font-size: 0.97em;
+      color: #fff;
+    }
+    .badge-high { background: var(--red); }
+    .badge-critical { background: var(--orange); }
+    .badge-medium { background: var(--yellow); color: #222; }
+    .badge-low { background: var(--green); }
+    .tamper-icon {
+      width: 22px; height: 22px;
+      vertical-align: middle;
+      margin-right: 0.3em;
+      opacity: 0.92;
+    }
+    .evidence-link {
+      color: #0366d6;
+      text-decoration: underline;
+      font-size: 0.97em;
+    }
+    @media (max-width: 900px) {
+      .container { padding: 1rem; }
+      th, td { font-size: 0.95em; }
+    }
+    @media (max-width: 700px) {
+      .filter-row { flex-direction: column; align-items: flex-start; }
+      table, thead, tbody, th, td, tr { display: block; }
+      thead { display: none; }
+      tr { margin-bottom: 1em; background: #fff; border-radius: 8px; box-shadow: var(--shadow);}
+      td { border: none; padding: 0.6em 0.8em; position: relative; }
+      td:before {
+        content: attr(data-label);
+        font-weight: 600;
+        color: #888;
+        display: block;
+        margin-bottom: 0.2em;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Tamper History Dashboard</h1>
+    <div style="font-size:1.1rem;font-style:italic;">
+      Review all instrument tamper events in detail.
+    </div>
+  </header>
+  <div class="container">
+    <div class="filter-row">
+      <label>Date Range:
+        <input type="date" id="start-date" value="">
+        <span>to</span>
+        <input type="date" id="end-date" value="">
+      </label>
+      <label>Severity:
+        <select id="severity-filter">
+          <option value="">All</option>
+          <option value="low">Low</option>
+          <option value="medium">Medium</option>
+          <option value="high">High</option>
+          <option value="critical">Critical</option>
+        </select>
+      </label>
+      <div class="checkbox-group">
+        <label><input type="checkbox" class="tamper-type" value="magnetic" checked> <span title="Magnetic">&#x1F50E;</span> Magnetic</label>
+        <label><input type="checkbox" class="tamper-type" value="circuit_change" checked> <span title="Circuit">&#9889;</span> Circuit</label>
+        <label><input type="checkbox" class="tamper-type" value="firmware_mod" checked> <span title="Firmware">&#128187;</span> Firmware</label>
+        <label><input type="checkbox" class="tamper-type" value="seal_removed" checked> <span title="Seal">&#128274;</span> Seal</label>
+        <label><input type="checkbox" class="tamper-type" value="mechanical" checked> <span title="Mechanical">&#128295;</span> Mechanical</label>
+      </div>
+      <label>Search:
+        <input type="text" id="search-box" placeholder="Description, location...">
+      </label>
+      <button id="clear-filters" style="padding:0.4em 1.1em; border-radius:6px; border:none; background:#ededed; cursor:pointer;">Clear</button>
+    </div>
+    <table id="tamper-table">
+      <thead>
+        <tr>
+          <th class="sortable" data-sort="localTime">Local Time <span class="sort-arrow"></span></th>
+          <th>Tamper Type</th>
+          <th class="sortable" data-sort="severity">Severity <span class="sort-arrow"></span></th>
+          <th>Location</th>
+          <th>Description</th>
+          <th>Evidence</th>
+          <th>Confidence (%)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Rows will be injected by JS -->
+      </tbody>
+    </table>
+  </div>
+  <script>
+    const tamperIcons = {
+      magnetic: '<span class="tamper-icon" title="Magnetic">&#x1F50E;</span>',
+      circuit_change: '<span class="tamper-icon" title="Circuit">&#9889;</span>',
+      firmware_mod: '<span class="tamper-icon" title="Firmware">&#128187;</span>',
+      seal_removed: '<span class="tamper-icon" title="Seal">&#128274;</span>',
+      mechanical: '<span class="tamper-icon" title="Mechanical">&#128295;</span>',
+    };
+
+    const severityBadge = {
+      low: 'badge-low',
+      medium: 'badge-medium',
+      high: 'badge-high',
+      critical: 'badge-critical'
+    };
+
+    // Mock Data: 8 recent tamper events
+    const tamperEvents = [
+      {
+        localTime: '2025-09-23 19:12:45',
+        tamperType: 'magnetic',
+        severity: 'high',
+        location: 'Mumbai, Maharashtra',
+        description: 'Magnetic field detected near load cell.',
+        evidence: 'image001.jpg',
+        confidence: 93,
+      },
+      {
+        localTime: '2025-09-22 09:23:12',
+        tamperType: 'circuit_change',
+        severity: 'critical',
+        location: 'Bengaluru, Karnataka',
+        description: 'Circuit alteration detected, wiring mismatch.',
+        evidence: 'report_circuit_0922.pdf',
+        confidence: 97,
+      },
+      {
+        localTime: '2025-09-21 15:45:37',
+        tamperType: 'seal_removed',
+        severity: 'medium',
+        location: 'Ahmedabad, Gujarat',
+        description: 'Physical seal broken on enclosure.',
+        evidence: 'seal_break_photo.png',
+        confidence: 86,
+      },
+      {
+        localTime: '2025-09-20 22:11:09',
+        tamperType: 'mechanical',
+        severity: 'low',
+        location: 'Hyderabad, Telangana',
+        description: 'Unusual vibration patterns detected.',
+        evidence: 'vibration_log.txt',
+        confidence: 76,
+      },
+      {
+        localTime: '2025-09-19 11:04:51',
+        tamperType: 'firmware_mod',
+        severity: 'high',
+        location: 'Chennai, Tamil Nadu',
+        description: 'Firmware integrity check failed.',
+        evidence: 'fw_integrity.json',
+        confidence: 92,
+      },
+      {
+        localTime: '2025-09-18 18:27:15',
+        tamperType: 'magnetic',
+        severity: 'medium',
+        location: 'Pune, Maharashtra',
+        description: 'Transient magnetic anomaly detected.',
+        evidence: 'mag_trace20250918.csv',
+        confidence: 84,
+      },
+      {
+        localTime: '2025-09-17 08:56:02',
+        tamperType: 'seal_removed',
+        severity: 'low',
+        location: 'Kolkata, West Bengal',
+        description: 'Seal removed but no intrusion detected.',
+        evidence: 'seal_check_report.pdf',
+        confidence: 72,
+      },
+      {
+        localTime: '2025-09-16 21:30:28',
+        tamperType: 'circuit_change',
+        severity: 'critical',
+        location: 'Jaipur, Rajasthan',
+        description: 'Unauthorized circuit modification, main board.',
+        evidence: 'circuit_alert.png',
+        confidence: 98,
+      }
+    ];
+
+    // For date inputs
+    function getToday() {
+      const d = new Date();
+      return d.toISOString().slice(0,10);
+    }
+    document.getElementById('end-date').value = getToday();
+    let minDate = new Date();
+    minDate.setDate(minDate.getDate()-30);
+    document.getElementById('start-date').value = minDate.toISOString().slice(0,10);
+
+    // Filtering and sorting state
+    let sortBy = 'localTime', sortDir = 'desc';
+
+    function compare(a, b, key, dir) {
+      if (key === 'localTime') {
+        let va = new Date(a[key]), vb = new Date(b[key]);
+        return dir === 'asc' ? va-vb : vb-va;
+      }
+      if (key === 'severity') {
+        const sevRank = {low:1, medium:2, high:3, critical:4};
+        return dir === 'asc' ? sevRank[a.severity]-sevRank[b.severity]
+                             : sevRank[b.severity]-sevRank[a.severity];
+      }
+      return 0;
+    }
+
+    function renderTable() {
+      // Filters
+      const startDate = document.getElementById('start-date').value;
+      const endDate = document.getElementById('end-date').value;
+      const sev = document.getElementById('severity-filter').value;
+      const types = Array.from(document.querySelectorAll('.tamper-type:checked')).map(cb=>cb.value);
+      const search = document.getElementById('search-box').value.trim().toLowerCase();
+
+      // Filter events
+      let filtered = tamperEvents.filter(ev => {
+        let d = ev.localTime.slice(0,10);
+        if (startDate && d < startDate) return false;
+        if (endDate && d > endDate) return false;
+        if (sev && ev.severity !== sev) return false;
+        if (!types.includes(ev.tamperType)) return false;
+        if (search && !(ev.description.toLowerCase().includes(search) || ev.location.toLowerCase().includes(search))) return false;
+        return true;
+      });
+
+      // Sort
+      filtered.sort((a,b)=>compare(a,b,sortBy,sortDir));
+
+      // Render
+      const tbody = document.querySelector('#tamper-table tbody');
+      tbody.innerHTML = '';
+      for (let ev of filtered) {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td data-label="Local Time">${ev.localTime}</td>
+          <td data-label="Tamper Type">${tamperIcons[ev.tamperType] || ''}<span style="vertical-align:middle;">${ev.tamperType.replace('_',' ')}</span></td>
+          <td data-label="Severity"><span class="badge badge-${ev.severity}">${ev.severity.charAt(0).toUpperCase()+ev.severity.slice(1)}</span></td>
+          <td data-label="Location">${ev.location}</td>
+          <td data-label="Description">${ev.description}</td>
+          <td data-label="Evidence"><a class="evidence-link" href="#" onclick="return false;">${ev.evidence}</a></td>
+          <td data-label="Confidence (%)">${ev.confidence}%</td>
+        `;
+        tbody.appendChild(row);
+      }
+    }
+
+    function setSort(th) {
+      const key = th.getAttribute('data-sort');
+      if (key === sortBy) {
+        sortDir = sortDir === 'asc' ? 'desc' : 'asc';
+      } else {
+        sortBy = key;
+        sortDir = 'desc';
+      }
+      document.querySelectorAll('th.sortable .sort-arrow').forEach(el=>el.textContent='');
+      th.querySelector('.sort-arrow').textContent = sortDir === 'asc' ? '▲':'▼';
+      renderTable();
+    }
+
+    document.querySelectorAll('th.sortable').forEach(th=>{
+      th.addEventListener('click',()=>setSort(th));
+    });
+
+    document.querySelectorAll('.filter-row input, .filter-row select').forEach(inp=>{
+      inp.addEventListener('input', renderTable);
+      inp.addEventListener('change', renderTable);
+    });
+    document.querySelectorAll('.tamper-type').forEach(cb=>{
+      cb.addEventListener('change', renderTable);
+    });
+    document.getElementById('search-box').addEventListener('input', renderTable);
+
+    document.getElementById('clear-filters').onclick = function() {
+      document.getElementById('start-date').value = minDate.toISOString().slice(0,10);
+      document.getElementById('end-date').value = getToday();
+      document.getElementById('severity-filter').value = '';
+      document.querySelectorAll('.tamper-type').forEach(cb=>cb.checked=true);
+      document.getElementById('search-box').value = '';
+      renderTable();
+    };
+
+    // Initial sort arrow
+    document.querySelector('th[data-sort="'+sortBy+'"] .sort-arrow').textContent = sortDir === 'asc' ? '▲':'▼';
+
+    // Initial render
+    renderTable();
+  </script>
+</body>
+</html>

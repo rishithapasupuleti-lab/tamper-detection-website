@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Contact Us - ElectroNauts</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      background: #f7f9fc;
+      font-family: 'Segoe UI', Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 430px;
+      margin: 3rem auto;
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 2px 12px rgba(33,150,243,0.09);
+      padding: 2.5rem 2rem 2rem 2rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    h1 {
+      margin: 0 0 0.3em 0;
+      font-size: 2.2rem;
+      color: #0366d6;
+      letter-spacing: 2px;
+      font-weight: 700;
+      text-align: center;
+    }
+    h2 {
+      margin: 0 0 1.7em 0;
+      font-size: 1.3rem;
+      color: #222;
+      font-weight: 500;
+      text-align: center;
+      letter-spacing: 1px;
+    }
+    .contact-details {
+      width: 100%;
+      margin-bottom: 2em;
+      display: flex;
+      flex-direction: column;
+      gap: 0.7em;
+    }
+    .contact-details a {
+      color: #0366d6;
+      text-decoration: none;
+      font-size: 1.07em;
+      transition: color 0.18s;
+    }
+    .contact-details a:hover {
+      color: #0350a6;
+      text-decoration: underline;
+    }
+    form {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 1em;
+    }
+    label {
+      font-size: 1em;
+      color: #233;
+      font-weight: 500;
+      margin-bottom: 0.3em;
+      letter-spacing: 0.2px;
+    }
+    input, select, textarea {
+      padding: 0.65em 1em;
+      font-size: 1em;
+      border: 1px solid #e0e4ea;
+      border-radius: 8px;
+      background: #f6f8fa;
+      margin-bottom: 0.2em;
+      transition: border-color 0.18s, box-shadow 0.18s;
+      outline: none;
+      font-family: inherit;
+      resize: none;
+    }
+    input:focus, select:focus, textarea:focus {
+      border-color: #0366d6;
+      box-shadow: 0 0 0 2px #dbeafe;
+    }
+    textarea {
+      min-height: 90px;
+      max-height: 220px;
+    }
+    button[type="submit"] {
+      background: #0366d6;
+      color: #fff;
+      padding: 0.8em 1.1em;
+      border-radius: 8px;
+      border: none;
+      font-size: 1.08em;
+      font-weight: 600;
+      letter-spacing: 0.8px;
+      cursor: pointer;
+      transition: background 0.18s, box-shadow 0.18s;
+      box-shadow: 0 1px 6px rgba(33,150,243,0.11);
+      margin-top: 0.3em;
+    }
+    button[type="submit"]:hover {
+      background: #0350a6;
+      box-shadow: 0 2px 9px rgba(33,150,243,0.15);
+    }
+    @media (max-width: 600px) {
+      .container {
+        padding: 1.1rem 0.5rem 1rem 0.5rem;
+        max-width: 98vw;
+      }
+      h1 { font-size: 1.35rem; }
+      h2 { font-size: 1rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>ElectroNauts</h1>
+    <h2>Get in Touch</h2>
+    <div class="contact-details">
+      <div>
+        <b>Email:</b>
+        <a href="mailto:electronauts@gmail.com">electronauts@gmail.com</a>
+      </div>
+      <div>
+        <b>Phone:</b>
+        <a href="tel:+919887095667">+91 9887095667</a>
+      </div>
+    </div>
+    <form id="contact-form" autocomplete="off">
+      <div>
+        <label for="name">Full Name</label>
+        <input type="text" id="name" name="name" required placeholder="Your Name">
+      </div>
+      <div>
+        <label for="email">Email Address</label>
+        <input type="email" id="email" name="email" required placeholder="you@example.com">
+      </div>
+      <div>
+        <label for="phone">Phone Number <span style="color:#888;font-size:0.9em;">(optional)</span></label>
+        <input type="text" id="phone" name="phone" placeholder="e.g. +91 9876543210">
+      </div>
+      <div>
+        <label for="category">Category</label>
+        <select id="category" name="category" required>
+          <option value="">Select</option>
+          <option value="Complaint">Complaint</option>
+          <option value="Feedback">Feedback</option>
+          <option value="General Query">General Query</option>
+        </select>
+      </div>
+      <div>
+        <label for="message">Message</label>
+        <textarea id="message" name="message" required placeholder="Your message here..."></textarea>
+      </div>
+      <button type="submit">Submit</button>
+    </form>
+  </div>
+  <script>
+    document.getElementById('contact-form').onsubmit = function(e) {
+      e.preventDefault();
+      alert("Your message has been submitted. Thank you!");
+      this.reset();
+    };
+  </script>
+</body>
+</html>
